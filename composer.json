@@ -1,7 +1,7 @@
 {
   "name": "dwnload/wp-composer",
   "description": "A PHP class abstraction for WordPress plugins to support Composer.",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "license": "MIT",
   "authors": [
     {
@@ -11,13 +11,36 @@
       "role": "Developer"
     }
   ],
+  "config": {
+    "allow-plugins": {
+      "composer/installers": true,
+      "roots/wordpress-core-installer": true
+    },
+    "optimize-autoloader": true,
+    "platform": {
+      "php": "8.3"
+    },
+    "preferred-install": "dist",
+    "sort-packages": true
+  },
   "require": {
-    "composer/composer": "~1.0",
-    "php": ">=7.0.4"
+    "php": "^8.3",
+    "composer/composer": "^2.0"
+  },
+  "require-dev": {
+    "php-stubs/wordpress-stubs": "^6.8",
+    "rector/rector": "^2.1",
+    "roave/security-advisories": "dev-latest",
+    "roots/wordpress": "^6.8",
+    "wp-cli/wp-cli": "^2.12"
   },
   "autoload": {
     "psr-4": {
       "Dwnload\\WpComposer\\": "src"
     }
+  },
+  "scripts": {
+    "refactor": "rector --ansi",
+    "test:refactor": "rector --dry-run --debug --ansi"
   }
 }
