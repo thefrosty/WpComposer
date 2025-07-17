@@ -1,128 +1,124 @@
 <?php
 
-namespace Dwnload\WpComposer;
+declare(strict_types=1);
+
+namespace TheFrosty\WpComposer;
 
 use Composer\Console\Application;
+use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Output\OutputInterface;
+use WP_CLI;
+use WP_Theme;
+use const DIRECTORY_SEPARATOR;
 
 /**
  * Class WpComposer
- *
- * @package Dwnload\WpComposer
+ * @package TheFrosty\WpComposer
  */
-class WpComposer {
+class WpComposer
+{
 
-    const VERSION = '0.0.1';
+    public const string VERSION = '0.1.0';
 
-    /** @var  Application $app */
-    protected $app;
-
-    /**
-     * WpComposer constructor.
-     *
-     * @param Application $application
-     */
-    public function __construct( Application $application ) {
-        $this->app = $application;
+    public function __construct(protected Application $app)
+    {
+        //
     }
 
-    /**
-     * @return Application
-     */
-    public function getApp(): Application {
+    public function getApp(): Application
+    {
         return $this->app;
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function run() {
-        // Run the Composer command.
-        $application = $this->app;
-        $application->setAutoExit( false );
-        $application->run();
+    public function run(?InputInterface $input = null, ?OutputInterface $output = null): ?int
+    {
+        try {
+            $application = $this->getApp();
+            $application->setAutoExit(false);
+            return $application->run($input, $output);
+        } catch (\Exception $e) {
+            WP_CLI::warning($e->getMessage());
+            return null;
+        }
     }
 
     /**
-     * Execute a composer command for all the themes and plugins
-     *
-     * @param callable $callback A callback function to execute for each function
+     * Execute a composer command for all the plugins and themes.
+     * @param callable $callback
      */
-    public function recursiveExecution( callable $callback ) {
-        if ( ! is_callable( $callback ) ) {
-            die( 'Not a valid callback.' );
-        }
-
+    public function recursiveExecution(callable $callback): void
+    {
         $directories = $this->getDirectories();
         $current_dir = getcwd();
 
-        foreach ( $directories as $dir => $data ) {
-            chdir( $dir );
+        foreach ($directories as $dir => $data) {
+            chdir($dir);
 
-            $is_theme = ( is_object( $data ) && get_class( $data ) === 'WP_Theme' );
-            $is_plugin = ! $is_theme;
+            $is_theme = $data instanceof WP_Theme;
+            $is_plugin = !$is_theme;
 
-            call_user_func_array( $callback, [ $dir, $data, $is_plugin, $is_theme ] );
+            $callback($dir, $data, $is_plugin, $is_theme);
         }
 
-        chdir( $current_dir );
+        chdir($current_dir);
     }
 
     /**
-     * Retrieve the Directories to act upon
-     *
-     * @return array Array of plugins or WP_Theme objects
+     * Retrieve the directories to act upon.
+     * @return array
      */
-    private function getDirectories() {
+    private function getDirectories(): array
+    {
         $index = [];
 
-        $plugins = apply_filters( 'all_plugins', get_plugins() );
-        if ( count( $plugins ) > 0 ) :
-            foreach ( $plugins as $path => $data ) :
-                $plugin = $this->filterPlugin( $path );
+        $plugins = apply_filters('all_plugins', get_plugins());
+        if (count($plugins) > 0) :
+            foreach ($plugins as $path => $data) :
+                $plugin = $this->filterPlugin($path);
 
-                if ( $plugin !== null && $this->shouldUsePath( $plugin ) )
-                    $index[ $plugin ] = $data;
+                if ($plugin !== null && $this->shouldUsePath($plugin)) {
+                    $index[$plugin] = $data;
+                }
             endforeach;
         endif;
 
         // Themes
         $themes = wp_get_themes();
-        $themes_root = trailingslashit( get_theme_root() );
+        $themes_root = trailingslashit(get_theme_root());
 
-        if ( count( $themes ) > 0 ) :
-            foreach ( $themes as $path => $data ) :
-                if ( $this->shouldUsePath( $themes_root . $path ) )
-                    $index[ $themes_root . '/' . $path ] = $data;
+        if (count($themes) > 0) :
+            foreach ($themes as $path => $data) :
+                if ($this->shouldUsePath($themes_root . $path)) {
+                    $index[$themes_root . DIRECTORY_SEPARATOR . $path] = $data;
+                }
             endforeach;
         endif;
 
-        return apply_filters( 'wp_composer_paths', $index );
+        return apply_filters('wp_composer_paths', $index);
     }
 
     /**
-     * Internally Filter the plugin's path
-     *
+     * Internally filter the plugin's path.
      * @param string $plugin
-     *
-     * @return null|string Null for a plugin not to be included
+     * @return string|null
      */
-    private function filterPlugin( string $plugin ) {
-        // They're not in a single file, cannot support them
-        if ( dirname( trailingslashit( WP_PLUGIN_DIR ) . $plugin ) === WP_PLUGIN_DIR ) {
+    private function filterPlugin(string $plugin): ?string
+    {
+        // They're not in a single file, cannot support them.
+        if (dirname(trailingslashit(WP_PLUGIN_DIR) . $plugin) === WP_PLUGIN_DIR) {
             return null;
-        } else {
-            return trailingslashit( WP_PLUGIN_DIR ) . dirname( $plugin );
         }
+
+        return trailingslashit(WP_PLUGIN_DIR) . dirname($plugin);
     }
 
     /**
-     * See if we should include a path if they don't have a composer.json
-     *
+     * See if we should include a path if they don't have a composer.json.
      * @param string $path
-     *
      * @return bool
      */
-    private function shouldUsePath( string $path ): bool {
-        return file_exists( trailingslashit( $path ) . 'composer.json' );
+    private function shouldUsePath(string $path): bool
+    {
+        return file_exists(trailingslashit($path) . 'composer.json');
     }
 }
