@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Dwnload\WpComposer\Composer;
+namespace TheFrosty\WpComposer\Composer;
 
 use function copy;
 use function dir;
@@ -15,7 +15,7 @@ use function symlink;
 
 /**
  * Class Scripts
- * @package Dwnload\WpComposer\Composer
+ * @package TheFrosty\WpComposer\Composer
  * @psalm-api
  */
 class Scripts

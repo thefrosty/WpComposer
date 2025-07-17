@@ -2,18 +2,18 @@
 
 ![WordPress Composer](.github/wp-composer.jpg?raw=true "WordPress Composer")
 
-[![PHP from Packagist](https://img.shields.io/packagist/php-v/dwnload/wp-composer.svg)]()
-[![Latest Stable Version](https://img.shields.io/packagist/v/dwnload/wp-composer.svg)](https://packagist.org/packages/dwnload/wp-composer)
-[![Total Downloads](https://img.shields.io/packagist/dt/dwnload/wp-composer.svg)](https://packagist.org/packages/dwnload/wp-composer)
-[![License](https://img.shields.io/packagist/l/dwnload/wp-composer.svg)](https://packagist.org/dwnload/wp-composer)
-![Build Status](https://github.com/dwnload/wp-composer/actions/workflows/master.yml/badge.svg)
+[![PHP from Packagist](https://img.shields.io/packagist/php-v/thefrosty/wp-composer.svg)]()
+[![Latest Stable Version](https://img.shields.io/packagist/v/thefrosty/wp-composer.svg)](https://packagist.org/packages/thefrosty/wp-composer)
+[![Total Downloads](https://img.shields.io/packagist/dt/thefrosty/wp-composer.svg)](https://packagist.org/packages/thefrosty/wp-composer)
+[![License](https://img.shields.io/packagist/l/thefrosty/wp-composer.svg)](https://packagist.org/thefrosty/wp-composer)
+![Build Status](https://github.com/thefrosty/wp-composer/actions/workflows/master.yml/badge.svg)
 
 A PHP class abstraction for WordPress plugins to support Composer.
 
 #### Installation
 
 ```bash
-composer require dwnload/wp-composer
+composer require thefrosty/wp-composer
 ```
 
 #### Additional requirements
@@ -22,11 +22,11 @@ Update your `scripts.post-update-cmd`:
 {
   "scripts": {
     "post-update-cmd": [
-      "Dwnload\\WpComposer\\Composer\\Scripts::postUpdate"
+      "TheFrosty\\WpComposer\\Composer\\Scripts::postUpdate"
     ]
   }
 }
 ```
 
-OR run: `composer config scripts.post-update-cmd.0 "Dwnload\\WpComposer\\Composer\\Scripts::postUpdate"`
+OR run: `composer config scripts.post-update-cmd.0 "TheFrosty\\WpComposer\\Composer\\Scripts::postUpdate"`
 

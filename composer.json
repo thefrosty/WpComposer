@@ -36,7 +36,7 @@
   },
   "autoload": {
     "psr-4": {
-      "Dwnload\\WpComposer\\": "src"
+      "TheFrosty\\WpComposer\\": "src"
     }
   },
   "scripts": {
