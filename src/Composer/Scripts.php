@@ -25,7 +25,7 @@ class Scripts
      */
     public static function postUpdate(): void
     {
-        self::copy('vendor/dwnload/wp-composer/mu-plugins/', 'wp-content/mu-plugins/');
+        self::copy('vendor/thefrosty/wp-composer/mu-plugins/', 'wp-content/mu-plugins/');
     }
 
     /**
