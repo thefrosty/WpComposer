@@ -62,13 +62,15 @@ class Dashboard implements WpHooksInterface
     <option value="update">update</option>
     <option value="require">require</option>
     <option value="remove">remove</option>
+    <option value="diagnose">diagnose</option>
+    <option value="version">version</option>
 </select>
 <input id="wp-composer-ui__args" name="args" type="text" value="" 
     class="hidden" placeholder="vendor/package:2.*" disabled required>
 </p>
 <p>
 <span>Options<br></span>
-<fieldset>
+<fieldset id="wp-composer-ui__flags">
     <div>
         <input type="checkbox" name="flags" value="--no-interaction" checked>
         <label for="flags">--no-interaction</label>
@@ -85,12 +87,13 @@ class Dashboard implements WpHooksInterface
 </p>
 {$cb(get_submit_button('Submit', name: 'wp-composer-ui__submit'))}
 
-<p><pre id="wp-composer-ui__response" style="white-space: pre-wrap"></pre></p>
+<p><span id="wp-composer-ui__response" style="white-space: pre-wrap"></span></p>
 {$cb(wp_nonce_field(Process::ACTION, Process::NONCE, display: false))}
 <script>
 document.addEventListener('DOMContentLoaded', function () {
     document.getElementById('wp-composer-ui__command').addEventListener('change', function() {
         const arg = document.getElementById('wp-composer-ui__args')
+        const flags = document.getElementById('wp-composer-ui__flags')
         if (['require', 'remove'].includes(this.value)) {
             arg.classList.remove('hidden')
             arg.removeAttribute('disabled')
@@ -99,6 +102,11 @@ document.addEventListener('DOMContentLoaded', function () {
             arg.classList.add('hidden')
             arg.removeAttribute('required')
             arg.setAttribute('disabled', 'disabled')
+        }
+        if (['diagnose', 'version'].includes(this.value)) {
+            flags.classList.add('hidden')
+        } else {
+            flags.classList.remove('hidden')
         }
     })
     
@@ -114,7 +122,7 @@ document.addEventListener('DOMContentLoaded', function () {
         }
         
         // Clear the "console".
-        responseEl.textContent = ''
+        responseEl.innerHTML = ''
         submit.disabled = true
         
         const data = new FormData()
@@ -126,21 +134,16 @@ document.addEventListener('DOMContentLoaded', function () {
         data.append('user_id', '{$cb(wp_get_current_user()->ID)}')
         
         try {
-            const response = await fetch(ajaxurl, {
-                method: 'POST',
-                body: data,
-            })
-        
-            const result = await response.json()
-        
-            if (response.success) {
-                responseEl.textContent = '✅ ' + response.data
+            const response = await fetch(ajaxurl, { method: 'POST', body: data })
+            const result = await response.json()        
+            if (result.success) {
+                responseEl.innerHTML = result.data
             } else {
-                responseEl.textContent = '❌ Failed: ' + response.data
+                responseEl.innerHTML = '❌ Failed: ' + result.data
             }
         } catch (error) {
             console.error('Error', error)
-            responseEl.textContent = '❌ Error: ' + error
+            responseEl.innerHTML = '❌ Error: ' + error
         } finally {
             submit.disabled = false
         }
