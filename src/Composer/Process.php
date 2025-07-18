@@ -6,7 +6,6 @@ namespace TheFrosty\WpComposer\Composer;
 
 use Composer\Console\Application;
 use ReflectionMethod;
-use Symfony\Component\Console\Output\OutputInterface;
 use TheFrosty\WpComposer\WpComposer;
 use TheFrosty\WpComposer\WpCommands;
 use TheFrosty\WpUtilities\Plugin\HooksTrait;
@@ -65,14 +64,13 @@ class Process implements HttpFoundationRequestInterface, WpHooksInterface
 
         $reflection = new ReflectionMethod($plugin, $command);
         $params = $reflection->getNumberOfParameters();
-        /** @var OutputInterface $response */
+        /** @var \Symfony\Component\Console\Output\BufferedOutput $response */
         $response = match ($params) {
             0 => $plugin->$command(),
             1 => $plugin->$command($args['flags']),
             2 => $plugin->$command($args['args'], $args['flags']),
         };
-        error_log(print_r($response, true));
 
-        wp_send_json_success();
+        wp_send_json_success($response->fetch());
     }
 }
