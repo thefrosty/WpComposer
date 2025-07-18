@@ -67,7 +67,7 @@ trait ComposerCommands
 
     public function diagnose(): OutputInterface
     {
-        $this->getComposer()->run(new ArrayInput(['command' => 'diagnose']), $output = new BufferedOutput());
+        $this->getComposer()->run(new ArrayInput(['command' => 'diagnose', '--no-ansi' => true]), $output = new BufferedOutput());
         return $output;
     }
 
