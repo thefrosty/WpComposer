@@ -1,30 +1,24 @@
 <?php
 
-namespace Dwnload\WpComposer;
+declare(strict_types=1);
+
+namespace TheFrosty\WpComposer;
 
 /**
- * Class AbstractCommand
- *
- * @package Dwnload\WpComposer
+ * Class AbstractPlugin
+ * @package TheFrosty\WpComposer
  */
-abstract class AbstractPlugin implements WpComposerInterface {
+abstract class AbstractPlugin
+{
 
-    /** @var  WpComposer $wp_composer */
-    private $wp_composer;
+    use ComposerCommands;
 
     /**
-     * WpCliCommand constructor.
-     *
+     * AbstractPlugin constructor.
      * @param WpComposer $composer
      */
-    public function __construct( WpComposer $composer ) {
-        $this->wp_composer = $composer;
-    }
-
-    /**
-     * @return WpComposer
-     */
-    public function getWpComposer(): WpComposer {
-        return $this->wp_composer;
+    public function __construct(private readonly WpComposer $composer)
+    {
+        //
     }
 }

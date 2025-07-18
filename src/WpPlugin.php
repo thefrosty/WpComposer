@@ -1,24 +1,14 @@
 <?php
 
-namespace Dwnload\WpComposer;
+declare(strict_types=1);
 
-use Symfony\Component\Console\Input\ArrayInput;
+namespace TheFrosty\WpComposer;
 
 /**
- * Class ComposerInstall
- *
- * @package Dwnload\WpComposer
+ * Class WpPlugin
+ * @package TheFrosty\WpComposer
  */
-class WpPlugin extends AbstractPlugin {
+class WpPlugin extends AbstractPlugin
+{
 
-    /**
-     * @return int 0 if everything went fine, or an error code
-     * @throws \Exception
-     */
-    public function install(): int {
-        $application = $this->getWpComposer()->getApp();
-        $application->setAutoExit( false );
-
-        return $application->run( new ArrayInput( [ 'command' => 'install' ] ) );
-    }
 }
