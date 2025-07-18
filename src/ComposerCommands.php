@@ -4,14 +4,13 @@ declare(strict_types=1);
 
 namespace TheFrosty\WpComposer;
 
-use _PHPStan_5878035a0\Symfony\Component\Console\Output\ConsoleOutput;
 use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Output\BufferedOutput;
+use Symfony\Component\Console\Output\ConsoleOutput;
 use Symfony\Component\Console\Output\OutputInterface;
 use function array_filter;
 use function array_map;
 use function array_merge;
-use function error_log;
 use function explode;
 use function sanitize_text_field;
 use function sprintf;
