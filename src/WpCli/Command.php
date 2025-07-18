@@ -4,15 +4,15 @@ declare(strict_types=1);
 
 namespace TheFrosty\WpComposer\WpCli;
 
-use TheFrosty\WpComposer\WpComposer;
-use TheFrosty\WpComposer\Contract\Composer;
+use Composer\Factory;
 use ReflectionException;
 use ReflectionMethod;
+use TheFrosty\WpComposer\ComposerCommands;
+use TheFrosty\WpComposer\WpComposer;
 use WP_CLI;
 use WP_CLI_Command;
 use function putenv;
 use function sprintf;
-use Composer\Factory;
 
 /**
  * Class Command
@@ -23,7 +23,7 @@ abstract class Command extends WP_CLI_Command
 
     public const string NAME = 'composer';
 
-    use Composer;
+    use ComposerCommands;
 
     public function __construct(private readonly WpComposer $composer)
     {

@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace TheFrosty\WpComposer;
 
-use TheFrosty\WpComposer\Contract\Composer;
-
 /**
  * Class AbstractPlugin
  * @package TheFrosty\WpComposer
@@ -13,7 +11,7 @@ use TheFrosty\WpComposer\Contract\Composer;
 abstract class AbstractPlugin
 {
 
-    use Composer;
+    use ComposerCommands;
 
     /**
      * AbstractPlugin constructor.

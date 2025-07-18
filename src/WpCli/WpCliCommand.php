@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace TheFrosty\WpComposer\WpCli;
 
+use TheFrosty\WpComposer\Commands;
+use TheFrosty\WpComposer\ComposerCommands;
 use TheFrosty\WpComposer\WpComposer;
 use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Input\InputInterface;
@@ -33,93 +35,17 @@ use const ARRAY_FILTER_USE_KEY;
  * default: null
  * ---
  */
-class WpCliCommand extends Command
+class WpCliCommand extends Command implements Commands
 {
 
-    public const string ARG_DEV = 'dev';
-    public const string ARG_EXCLUDE = 'exclude';
-    public const string ARG_RECURSIVE = 'recursive';
-
-    public function install($args, $assoc_args): void
-    {
-        $input = new ArrayInput(['command' => 'install']);
-        if (!$this->doRecursive($input, new BufferedOutput(), $assoc_args)) {
-            $this->getComposer()->run($input, $output = new BufferedOutput());
-            WP_CLI::success($output->fetch());
-        }
-    }
-
-    public function update($args, $assoc_args): void
-    {
-        $input = new ArrayInput(['command' => 'update']);
-        if (!$this->doRecursive($input, new BufferedOutput(), $assoc_args)) {
-            $this->getComposer()->run($input, $output = new BufferedOutput());
-            WP_CLI::success($output->fetch());
-        }
-    }
-
-    public function require($args, $assoc_args): void
-    {
-        if (empty($args[0])) {
-            WP_CLI::error('Missing required argument');
-        }
-        $dev = $assoc_args[self::ARG_DEV] ?? null;
-        $input = new ArrayInput(
-            array_filter(
-                ['command' => 'require', (!$dev ? null: '--dev') => true],
-                static fn(mixed $key): bool => !empty($key),
-                ARRAY_FILTER_USE_KEY
-            )
-        );
-        $this->getComposer()->run($input, $output = new BufferedOutput());
-        WP_CLI::success($output->fetch());
-    }
-
-    public function remove($args, $assoc_args): void
-    {
-        if (empty($args[0])) {
-            WP_CLI::error('Missing required argument');
-        }
-        $dev = $assoc_args[self::ARG_DEV] ?? null;
-        $input = new ArrayInput(
-            array_filter(
-                ['command' => 'remove', (!$dev ? null: '--dev') => true],
-                static fn(mixed $key): bool => !empty($key),
-                ARRAY_FILTER_USE_KEY
-            )
-        );
-        $this->getComposer()->run($input, $output = new BufferedOutput());
-        WP_CLI::success($output->fetch());
-    }
-
-    public function diagnose($args, $assoc_args): void
-    {
-        $input = new ArrayInput(['command' => 'diagnose']);
-        if (!$this->doRecursive($input, assoc_args: $assoc_args)) {
-            $this->getComposer()->run($input, $output = new BufferedOutput());
-            WP_CLI::success($output->fetch());
-        }
-    }
-
-    public function version(): void
-    {
-        WP_CLI::line(
-            sprintf(
-                '%s version %s',
-                esc_attr(WP_CLI::colorize('%gWpComposer%n')),
-                esc_attr(WP_CLI::colorize('%y' . WpComposer::VERSION . '%n'))
-            )
-        );
-        $this->getComposer()->run(new ArrayInput(['-V' => true, '--ansi' => true]), $output = new BufferedOutput());
-        WP_CLI::line($output->fetch());
-    }
+    use ComposerCommands;
 
     protected function doRecursive(
         InputInterface $input,
         ?OutputInterface $output = null,
         ?array $assoc_args = null
     ): ?true {
-        $exclude = $assoc_args[self::ARG_EXCLUDE] ?? null;
+        $exclude = $assoc_args[Commands::ARG_EXCLUDE] ?? null;
         if (filter_var($assoc_args[self::ARG_RECURSIVE] ?? false, FILTER_VALIDATE_BOOLEAN)) {
             $this->getComposer()->recursiveExecution(
                 function (string $path, array $data, bool $is_plugin, bool $is_theme) use (

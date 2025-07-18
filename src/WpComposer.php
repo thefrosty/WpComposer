@@ -20,20 +20,15 @@ class WpComposer
 
     public const string VERSION = '0.1.0';
 
-    public function __construct(protected Application $app)
+    public function __construct(protected Application $application)
     {
         //
-    }
-
-    public function getApp(): Application
-    {
-        return $this->app;
     }
 
     public function run(?InputInterface $input = null, ?OutputInterface $output = null): ?int
     {
         try {
-            $application = $this->getApp();
+            $application = $this->application;
             $application->setAutoExit(false);
             return $application->run($input, $output);
         } catch (\Exception $e) {
