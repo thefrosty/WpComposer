@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace TheFrosty\WpComposer\Contracts;
 
+use Symfony\Component\Console\Output\OutputInterface;
+
 /**
  * Interface Commands
  * @package TheFrosty\WpComposer
@@ -11,19 +13,15 @@ namespace TheFrosty\WpComposer\Contracts;
 interface Commands
 {
 
-    public const string ARG_DEV = 'dev';
-    public const string ARG_EXCLUDE = 'exclude';
-    public const string ARG_RECURSIVE = 'recursive';
+    public function install(string $flags): OutputInterface;
 
-    public function install($args, $assoc_args): void;
+    public function update(string $flags): OutputInterface;
 
-    public function update($args, $assoc_args): void;
+    public function require(string $args, string $flags): OutputInterface;
 
-    public function require($args, $assoc_args): void;
+    public function remove(string $args, string $flags): OutputInterface;
 
-    public function remove($args, $assoc_args): void;
+    public function diagnose(): OutputInterface;
 
-    public function diagnose($args, $assoc_args): void;
-
-    public function version(): void;
+    public function version(): OutputInterface;
 }

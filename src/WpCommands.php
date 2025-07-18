@@ -8,7 +8,7 @@ namespace TheFrosty\WpComposer;
  * Class WpPlugin
  * @package TheFrosty\WpComposer
  */
-class WpPlugin extends AbstractPlugin
+class WpCommands extends AbstractCommands
 {
 
 }

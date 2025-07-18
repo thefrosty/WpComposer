@@ -4,11 +4,13 @@ declare(strict_types=1);
 
 namespace TheFrosty\WpComposer;
 
+use TheFrosty\WpComposer\Contracts\Commands;
+
 /**
- * Class AbstractPlugin
+ * Class AbstractCommands
  * @package TheFrosty\WpComposer
  */
-abstract class AbstractPlugin
+abstract class AbstractCommands implements Commands
 {
 
     use ComposerCommands;

@@ -13,20 +13,15 @@ declare(strict_types=1);
 
 namespace TheFrosty\WpComposer;
 
-use Composer\Console\Application;
-use ReflectionMethod;
-use TheFrosty\WpComposer\WpCli\WpCliCommand;
-use WP_CLI;
+use TheFrosty\WpComposer\Composer\Process;
+use TheFrosty\WpComposer\WpAdmin\Dashboard;
+use TheFrosty\WpUtilities\Plugin\PluginFactory;
 use function defined;
 
 defined('ABSPATH') || exit;
 
-add_action('init', static function (): void {
-    $plugin = new WpPlugin(new WpComposer(new Application()));
-    // Get ready-to-do something with the $plugin instance.
-
-    add_action('cli_init', static function () use ($plugin): void {
-        $composer = new ReflectionMethod($plugin, 'getComposer');
-        WP_CLI::add_command(WpCli\Command::NAME, new WpCliCommand($composer->invoke($plugin)));
-    });
-}, 2, 0);
+$plugin = PluginFactory::create('wp-composer-ui', __FILE__);
+$plugin
+    ->add(new Process())
+    ->addOnHook(Dashboard::class, 'load-index.php', 10, true)
+    ->initialize();
