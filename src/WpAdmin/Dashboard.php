@@ -126,23 +126,23 @@ document.addEventListener('DOMContentLoaded', function () {
         data.append('user_id', '{$cb(wp_get_current_user()->ID)}')
         
         try {
-          const response = await fetch(ajaxurl, {
-            method: 'POST',
-            body: data,
-          })        
-          
-          const result = await response.json()
+            const response = await fetch(ajaxurl, {
+                method: 'POST',
+                body: data,
+            })
         
-          if (result.success) {
-            responseEl.textContent = '✅ ' + result.data
-          } else {
-            responseEl.textContent = '❌ Failed: ' + result.data
-          }
+            const result = await response.json()
+        
+            if (response.success) {
+                responseEl.textContent = '✅ ' + response.data
+            } else {
+                responseEl.textContent = '❌ Failed: ' + response.data
+            }
         } catch (error) {
-          console.error(error)
-          responseEl.textContent = '❌ Error: ' + error
+            console.error('Error', error)
+            responseEl.textContent = '❌ Error: ' + error
         } finally {
-          submit.disabled = false
+            submit.disabled = false
         }
     })
 })
