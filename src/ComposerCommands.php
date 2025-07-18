@@ -11,6 +11,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 use function array_filter;
 use function array_map;
 use function array_merge;
+use function count;
 use function explode;
 use function sanitize_text_field;
 use function sprintf;
@@ -24,13 +25,19 @@ trait ComposerCommands
 
     public function install(string $flags): OutputInterface
     {
-        $this->getComposer()->run(new ArrayInput(['command' => 'install']), $output = new BufferedOutput());
+        $this->getComposer()->run(
+            new ArrayInput(array_merge(['command' => __FUNCTION__], $this->getFlags($flags))),
+            $output = new BufferedOutput()
+        );
         return $output;
     }
 
     public function update(string $flags): OutputInterface
     {
-        $this->getComposer()->run(new ArrayInput(['command' => 'update']), $output = new BufferedOutput());
+        $this->getComposer()->run(
+            new ArrayInput(array_merge(['command' => __FUNCTION__], $this->getFlags($flags))),
+            $output = new BufferedOutput()
+        );
         return $output;
     }
 
@@ -39,11 +46,10 @@ trait ComposerCommands
         if (empty($args)) {
             (new ConsoleOutput())->writeln('Error: Missing required argument');
         }
-        $_flags = array_map(static fn($str): string => sanitize_text_field($str), explode(',', $flags));
-        $input = new ArrayInput(
-            array_filter(array_merge(['command' => 'require'], $_flags))
+        $this->getComposer()->run(
+            new ArrayInput(array_merge(['command' => __FUNCTION__], $this->getFlags($flags))),
+            $output = new BufferedOutput()
         );
-        $this->getComposer()->run($input, $output = new BufferedOutput());
         return $output;
     }
 
@@ -52,11 +58,10 @@ trait ComposerCommands
         if (empty($args)) {
             (new ConsoleOutput())->writeln('Error: Missing required argument');
         }
-        $_flags = array_map(static fn($str): string => sanitize_text_field($str), explode(',', $flags));
-        $input = new ArrayInput(
-            array_filter(array_merge(['command' => 'require'], $_flags))
+        $this->getComposer()->run(
+            new ArrayInput(array_merge(['command' => __FUNCTION__], $this->getFlags($flags))),
+            $output = new BufferedOutput()
         );
-        $this->getComposer()->run($input, $output = new BufferedOutput());
         return $output;
     }
 
@@ -68,9 +73,17 @@ trait ComposerCommands
 
     public function version(): OutputInterface
     {
-        (new ConsoleOutput())->writeln(sprintf('WpComposer version %s', esc_attr(WpComposer::VERSION)));
-        $this->getComposer()->run(new ArrayInput(['-V' => true, '--ansi' => true]), $output = new BufferedOutput());
+        $output = new BufferedOutput();
+        $output->writeln(sprintf('WpComposer version %s', esc_attr(WpComposer::VERSION)));
+        $this->getComposer()->run(new ArrayInput(['-V' => true, '--no-ansi' => true]), $output);
         return $output;
+    }
+
+    protected function getFlags(string $flags): array
+    {
+        $_flags = array_map(static fn($str): string => sanitize_text_field($str), explode(',', $flags));
+
+        return array_fill_keys($_flags, true);
     }
 
     protected function getComposer(): WpComposer
