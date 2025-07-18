@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace TheFrosty\WpComposer;
+namespace TheFrosty\WpComposer\Contracts;
 
 /**
  * Interface Commands

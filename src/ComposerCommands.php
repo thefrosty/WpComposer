@@ -6,6 +6,7 @@ namespace TheFrosty\WpComposer;
 
 use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Output\BufferedOutput;
+use TheFrosty\WpComposer\Contracts\Commands;
 use WP_CLI;
 use function array_filter;
 use function defined;
@@ -13,7 +14,7 @@ use function sprintf;
 use const ARRAY_FILTER_USE_KEY;
 
 /**
- * Trait ComposerTrait
+ * Trait ComposerCommands
  * @package TheFrosty\WpComposer
  */
 trait ComposerCommands
@@ -92,6 +93,8 @@ trait ComposerCommands
         if (defined('WP_CLI') && WP_CLI) {
             WP_CLI::$method($message);
         }
+
+        // Do something when not inside CLI.
     }
 
     protected function getComposer(): WpComposer

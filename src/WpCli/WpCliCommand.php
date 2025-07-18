@@ -4,22 +4,17 @@ declare(strict_types=1);
 
 namespace TheFrosty\WpComposer\WpCli;
 
-use TheFrosty\WpComposer\Commands;
-use TheFrosty\WpComposer\ComposerCommands;
-use TheFrosty\WpComposer\WpComposer;
-use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Input\InputInterface;
-use Symfony\Component\Console\Output\BufferedOutput;
 use Symfony\Component\Console\Output\OutputInterface;
+use TheFrosty\WpComposer\ComposerCommands;
+use TheFrosty\WpComposer\Contracts\Commands;
 use WP_CLI;
 use function array_filter;
 use function array_flip;
 use function array_key_last;
-use function esc_attr;
 use function explode;
 use function method_exists;
 use function sprintf;
-use const ARRAY_FILTER_USE_KEY;
 
 /**
  * Class WpCliCommand
