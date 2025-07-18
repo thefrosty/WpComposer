@@ -25,7 +25,8 @@
   },
   "require": {
     "php": "^8.3",
-    "composer/composer": "^2.0"
+    "composer/composer": "^2.0",
+    "thefrosty/wp-utilities": "^3.8"
   },
   "require-dev": {
     "php-stubs/wordpress-stubs": "^6.8",
