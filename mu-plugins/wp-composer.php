@@ -18,14 +18,10 @@ use ReflectionMethod;
 use TheFrosty\WpComposer\WpCli\WpCliCommand;
 use WP_CLI;
 use function defined;
-use function is_super_admin;
 
 defined('ABSPATH') || exit;
 
 add_action('init', static function (): void {
-    if (!is_super_admin()) {
-        return;
-    }
     $plugin = new WpPlugin(new WpComposer(new Application()));
     // Get ready-to-do something with the $plugin instance.
 
