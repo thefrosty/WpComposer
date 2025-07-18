@@ -10,7 +10,6 @@ use Exception;
 use ReflectionMethod;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
-use function error_log;
 use const ABSPATH;
 
 /**
@@ -44,7 +43,6 @@ class WpComposer
         $reflection = new ReflectionMethod(Factory::class, 'getHomeDir');
         $COMPOSER_HOME = $reflection->invoke(null);
         putenv(sprintf('COMPOSER_HOME=%s', $COMPOSER_HOME));
-        error_log(getenv('COMPOSER_HOME'));
     }
 
     /**
