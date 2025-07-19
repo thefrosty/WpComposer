@@ -1,4 +1,4 @@
-# WordPress Composer
+# WordPress Composer UI
 
 ![WordPress Composer UI](.github/wp-composer-ui.jpg?raw=true "WordPress Composer UI")
 
@@ -6,7 +6,7 @@
 [![Latest Stable Version](https://img.shields.io/packagist/v/thefrosty/wp-composer.svg)](https://packagist.org/packages/thefrosty/wp-composer)
 [![Total Downloads](https://img.shields.io/packagist/dt/thefrosty/wp-composer.svg)](https://packagist.org/packages/thefrosty/wp-composer)
 [![License](https://img.shields.io/packagist/l/thefrosty/wp-composer.svg)](https://packagist.org/thefrosty/wp-composer)
-![Build Status](https://github.com/thefrosty/wp-composer/actions/workflows/master.yml/badge.svg)
+![Build Status](https://github.com/thefrosty/WpComposer/actions/workflows/main.yml/badge.svg)
 
 A PHP class abstraction for WordPress plugins to support Composer.
 
