@@ -70,6 +70,7 @@ class Process implements HttpFoundationRequestInterface, WpHooksInterface
             2 => $plugin->$command($args['args'], $args['flags']),
         };
 
-        wp_send_json_success(wp_kses_post($response->fetch()));
+        $data = method_exists($response, 'fetch') ? wp_kses_post($response->fetch()) : null;
+        wp_send_json_success($data);
     }
 }
