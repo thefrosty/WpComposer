@@ -13,10 +13,9 @@ use TheFrosty\WpUtilities\Plugin\HttpFoundationRequestInterface;
 use TheFrosty\WpUtilities\Plugin\HttpFoundationRequestTrait;
 use TheFrosty\WpUtilities\Plugin\WpHooksInterface;
 use function check_ajax_referer;
-use function error_log;
 use function is_super_admin;
-use function print_r;
 use function sprintf;
+use function wp_kses_post;
 use function wp_send_json_error;
 use function wp_send_json_success;
 
@@ -45,7 +44,7 @@ class Process implements HttpFoundationRequestInterface, WpHooksInterface
         $request = $this->getRequest()->request;
 
         if (!$request->has('user_id') || !is_super_admin($request->get('user_id', false))) {
-            wp_send_json_error();
+            wp_send_json_error('Invalid user');
         }
 
         $args = wp_parse_args(
@@ -71,6 +70,7 @@ class Process implements HttpFoundationRequestInterface, WpHooksInterface
             2 => $plugin->$command($args['args'], $args['flags']),
         };
 
-        wp_send_json_success($response->fetch());
+        $data = method_exists($response, 'fetch') ? wp_kses_post($response->fetch()) : null;
+        wp_send_json_success($data);
     }
 }
