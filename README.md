@@ -1,6 +1,6 @@
 # WordPress Composer
 
-![WordPress Composer](.github/wp-composer.jpg?raw=true "WordPress Composer")
+![WordPress Composer UI](.github/wp-composer-ui.jpg?raw=true "WordPress Composer UI")
 
 [![PHP from Packagist](https://img.shields.io/packagist/php-v/thefrosty/wp-composer.svg)]()
 [![Latest Stable Version](https://img.shields.io/packagist/v/thefrosty/wp-composer.svg)](https://packagist.org/packages/thefrosty/wp-composer)
