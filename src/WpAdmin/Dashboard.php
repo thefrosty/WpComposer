@@ -9,14 +9,14 @@ use TheFrosty\WpUtilities\Plugin\HooksTrait;
 use TheFrosty\WpUtilities\Plugin\WpHooksInterface;
 use function esc_html;
 use function esc_html__;
-use function get_submit_button;
+use function get_submit_button; // phpcs:ignore
 use function is_super_admin;
 use function sanitize_key;
 use function sprintf;
 use function wp_add_dashboard_widget;
-use function wp_get_current_user;
-use function wp_nonce_field;
-use function wp_slash;
+use function wp_get_current_user; // phpcs:ignore
+use function wp_nonce_field; // phpcs:ignore
+use function wp_slash; // phpcs:ignore
 
 /**
  * Class Dashboard
@@ -123,8 +123,11 @@ document.addEventListener('DOMContentLoaded', function () {
         const command = document.getElementById('wp-composer-ui__command')
         const responseEl = document.getElementById('wp-composer-ui__response')
         const submit = document.getElementById('wp-composer-ui__submit')
-        if (command.value === '' || (args.hasAttribute('required') && args.getAttribute('required') === 'required') && !args) {
-          return
+        if (
+          command.value === '' || 
+          (args.hasAttribute('required') && args.getAttribute('required') === 'required') && !args
+          ) {
+            return
         }
 
         // Clear the "console".
@@ -184,7 +187,6 @@ HTML;
                 sprintf('flag%s', sanitize_key($data['flag'])),
                 $data['attributes']['extra'] ?? '',
                 $data['attributes']['checked'] ?? '',
-
             );
         }
 
