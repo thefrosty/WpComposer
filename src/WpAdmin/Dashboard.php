@@ -7,11 +7,12 @@ namespace TheFrosty\WpComposer\WpAdmin;
 use TheFrosty\WpComposer\Composer\Process;
 use TheFrosty\WpUtilities\Plugin\HooksTrait;
 use TheFrosty\WpUtilities\Plugin\WpHooksInterface;
-use function admin_url;
+use function esc_html;
 use function esc_html__;
+use function get_submit_button;
 use function is_super_admin;
-use function printf;
-use function submit_button;
+use function sanitize_key;
+use function sprintf;
 use function wp_add_dashboard_widget;
 use function wp_get_current_user;
 use function wp_nonce_field;
@@ -53,7 +54,7 @@ class Dashboard implements WpHooksInterface
         $cb = static fn(mixed $fn): mixed => $fn;
         echo <<<HTML
 <div id="wp-composer-ui__wrapper">
-<form id="wp-composer-ui__form" aria-hidden="true" method="post">
+<form id="wp-composer-ui__form" aria-hidden="true" autocomplete="off" method="post">
 <p>
 <span>Command<br></span>
 <select id="wp-composer-ui__command" name="command" required>
@@ -62,29 +63,20 @@ class Dashboard implements WpHooksInterface
     <option value="update">update</option>
     <option value="require">require</option>
     <option value="remove">remove</option>
+    <option value="search">search</option>
     <option value="diagnose">diagnose</option>
     <option value="version">version</option>
 </select>
 <input id="wp-composer-ui__args" name="args" type="text" value="" 
     class="hidden" placeholder="vendor/package:2.*" disabled required>
 </p>
-<p>
-<span>Options<br></span>
+
 <fieldset id="wp-composer-ui__flags">
-    <div>
-        <input type="checkbox" name="flags" value="--no-interaction" checked>
-        <label for="flags">--no-interaction</label>
-    </div>
-    <div>
-        <input type="checkbox" name="flags" value="--optimize-autoloader" checked>
-        <label for="flags">--optimize-autoloader</label>
-    </div>
-    <div>
-        <input type="checkbox" name="flags" value="--no-dev" checked>
-        <label for="flags">--no-dev</label>
-    </div>
+<span>Options<br><br></span>
+{$this->renderCheckboxes()}
 </fieldset>
-</p>
+<br>
+
 {$cb(get_submit_button('Submit', name: 'wp-composer-ui__submit'))}
 
 <p><span id="wp-composer-ui__response" style="white-space: pre-wrap"></span></p>
@@ -94,7 +86,8 @@ document.addEventListener('DOMContentLoaded', function () {
     document.getElementById('wp-composer-ui__command').addEventListener('change', function() {
         const arg = document.getElementById('wp-composer-ui__args')
         const flags = document.getElementById('wp-composer-ui__flags')
-        if (['require', 'remove'].includes(this.value)) {
+        const showForFlags = document.querySelectorAll('[data-show-for]')
+        if (['require', 'remove', 'search'].includes(this.value)) {
             arg.classList.remove('hidden')
             arg.removeAttribute('disabled')
             arg.setAttribute('required', 'required')
@@ -108,6 +101,19 @@ document.addEventListener('DOMContentLoaded', function () {
         } else {
             flags.classList.remove('hidden')
         }
+        if (['search'].includes(this.value)) {
+            showForFlags.forEach(element => {
+                if (element.dataset.showFor === this.value) {
+                    element.classList.remove('hidden')
+                }
+            })
+        } else {
+            showForFlags.forEach(element => {
+                if (element.dataset.showFor !== this.value) {
+                    element.classList.add('hidden')
+                }
+            })
+        }
     })
     
     document.getElementById('wp-composer-ui__form').addEventListener('submit', async function (e) {
@@ -120,11 +126,11 @@ document.addEventListener('DOMContentLoaded', function () {
         if (command.value === '' || (args.hasAttribute('required') && args.getAttribute('required') === 'required') && !args) {
           return
         }
-        
+
         // Clear the "console".
         responseEl.innerHTML = ''
         submit.disabled = true
-        
+
         const data = new FormData()
         data.append('action', '{$cb(Process::ACTION)}')
         data.append('args', args.value)
@@ -153,5 +159,35 @@ document.addEventListener('DOMContentLoaded', function () {
 </form>
 </div>
 HTML;
+    }
+
+    private function renderCheckboxes(): string
+    {
+        $flags = [
+            ['flag' => '--no-interaction', 'attributes' => ['checked' => 'checked']],
+            ['flag' => '--optimize-autoloader', 'attributes' => ['checked' => 'checked']],
+            ['flag' => '--no-dev', 'attributes' => ['checked' => 'checked']],
+            ['flag' => '--only-name', 'attributes' => ['extra' => ' class="hidden" data-show-for="search"']],
+            ['flag' => '--only-vendor', 'attributes' => ['extra' => ' class="hidden" data-show-for="search"']],
+        ];
+        $html = '';
+        foreach ($flags as $data) {
+            $div = <<<'HTML'
+<div %4$s>
+    <label for="%3$s"><input id="%3$s" type="checkbox" name="flags" value="%1$s" %5$s>%2$s</label>
+</div>
+HTML;
+            $html .= sprintf(
+                $div,
+                esc_attr($data['flag']),
+                esc_html($data['flag']),
+                sprintf('flag%s', sanitize_key($data['flag'])),
+                $data['attributes']['extra'] ?? '',
+                $data['attributes']['checked'] ?? '',
+
+            );
+        }
+
+        return $html;
     }
 }
