@@ -21,6 +21,5 @@ abstract class AbstractCommands implements Commands
      */
     public function __construct(private readonly WpComposer $composer)
     {
-        //
     }
 }

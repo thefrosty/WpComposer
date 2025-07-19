@@ -6,8 +6,8 @@ namespace TheFrosty\WpComposer\Composer;
 
 use Composer\Console\Application;
 use ReflectionMethod;
-use TheFrosty\WpComposer\WpComposer;
 use TheFrosty\WpComposer\WpCommands;
+use TheFrosty\WpComposer\WpComposer;
 use TheFrosty\WpUtilities\Plugin\HooksTrait;
 use TheFrosty\WpUtilities\Plugin\HttpFoundationRequestInterface;
 use TheFrosty\WpUtilities\Plugin\HttpFoundationRequestTrait;

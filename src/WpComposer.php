@@ -23,7 +23,6 @@ class WpComposer
 
     public function __construct(protected Application $application)
     {
-        //
     }
 
     public function run(?InputInterface $input = null, ?OutputInterface $output = null): ?int
