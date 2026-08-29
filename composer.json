@@ -30,7 +30,7 @@
     "thefrosty/wp-utilities": "^3.8"
   },
   "require-dev": {
-    "php-stubs/wordpress-stubs": "^6.8",
+    "php-stubs/wordpress-stubs": "^7.0",
     "phpcompatibility/php-compatibility": "*",
     "rector/rector": "^2.1",
     "roots/wordpress": "^7.0",
